@@ -19,7 +19,31 @@ class InitialViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMap()
+        //fetchAlbums()
     }
+    
+    /*func fetchAlbums() {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
+        do {
+            if let albums = try CoreDataStack.default.context.fetch(fetchRequest) as? [Album] {
+                for album in albums {
+                    let annotation = MKPointAnnotation()
+                    let albumLocation = album.location as! AlbumLocation
+                    annotation.coordinate = CLLocationCoordinate2D(latitude: albumLocation.latitude, longitude: albumLocation.longitude)
+                    if let date = album.creationDate {
+                        annotation.title = "Album from \(date.description)"
+                    }
+                    
+                    mapView.addAnnotation(annotation)
+                    print("album has \(album.photos?.count ?? 0) photos")
+                }
+            }
+            
+        }
+        catch let error {
+            print(error.localizedDescription)
+        }
+    }*/
     
     private func setupMap() {
         mapView.delegate = self
@@ -37,7 +61,7 @@ class InitialViewController: UIViewController {
         if gesture.state == .began {
             let point = gesture.location(in: mapView)
             let location = mapView.convert(point, toCoordinateFrom: nil)
-            print(location)
+            PhotoDownloader.download(from: location)
         }
     }
 }

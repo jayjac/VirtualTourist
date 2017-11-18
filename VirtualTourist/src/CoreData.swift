@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-struct CoreDataStack {
+class CoreDataStack {
     
     private init() {}
     

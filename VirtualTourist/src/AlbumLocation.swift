@@ -20,7 +20,11 @@ class AlbumLocation: NSObject, NSCoding {
     var latitude: CLLocationDegrees
     var longitude: CLLocationDegrees
     
-    
+    init(location: CLLocationCoordinate2D) {
+        self.longitude = location.longitude
+        self.latitude = location.latitude
+        super.init()
+    }
     required init?(coder aDecoder: NSCoder) {
         let latitude = aDecoder.decodeDouble(forKey: LocationCodingKey.latitude.rawValue)
         let longitude = aDecoder.decodeDouble(forKey: LocationCodingKey.longitude.rawValue)

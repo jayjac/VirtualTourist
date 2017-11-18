@@ -7,10 +7,11 @@
     </entity>
     <entity name="Photo" representedClassName="Photo" syncable="YES" codeGenerationType="class">
         <attribute name="data" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="album" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="photos" inverseEntity="Album" syncable="YES"/>
     </entity>
     <elements>
         <element name="Album" positionX="-54" positionY="18" width="128" height="90"/>
-        <element name="Photo" positionX="7" positionY="-171" width="128" height="75"/>
+        <element name="Photo" positionX="7" positionY="-171" width="128" height="90"/>
     </elements>
 </model>

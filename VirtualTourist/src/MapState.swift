@@ -20,7 +20,7 @@ enum CodingKey: String {
 
 
 /**
- Class to persist the map's coordinate region into UserDefaults
+ Class to persist the map's coordinate region into UserDefaults.
  */
 class MapState: NSObject, NSCoding {
     
