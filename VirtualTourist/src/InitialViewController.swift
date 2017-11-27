@@ -19,31 +19,18 @@ class InitialViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMap()
-        //fetchAlbums()
+        if let pins = MapStatePersistor.retrievePins() {
+            for pin in pins {
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
+                mapView.addAnnotation(annotation)
+            }
+        }
     }
     
-    /*func fetchAlbums() {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
-        do {
-            if let albums = try CoreDataStack.default.context.fetch(fetchRequest) as? [Album] {
-                for album in albums {
-                    let annotation = MKPointAnnotation()
-                    let albumLocation = album.location as! AlbumLocation
-                    annotation.coordinate = CLLocationCoordinate2D(latitude: albumLocation.latitude, longitude: albumLocation.longitude)
-                    if let date = album.creationDate {
-                        annotation.title = "Album from \(date.description)"
-                    }
-                    
-                    mapView.addAnnotation(annotation)
-                    print("album has \(album.photos?.count ?? 0) photos")
-                }
-            }
-            
-        }
-        catch let error {
-            print(error.localizedDescription)
-        }
-    }*/
+
+    
+
     
     private func setupMap() {
         mapView.delegate = self
@@ -60,10 +47,25 @@ class InitialViewController: UIViewController {
     @objc private func longPressOnMap(_ gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
             let point = gesture.location(in: mapView)
-            let location = mapView.convert(point, toCoordinateFrom: nil)
-            PhotoDownloader.download(from: location)
+            addPinOntoMap(at: point)
         }
     }
+    
+    private func addPinOntoMap(at point: CGPoint) {
+        let location = mapView.convert(point, toCoordinateFrom: nil)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = location
+        mapView.addAnnotation(annotation)
+        MapStatePersistor.addPin(at: location)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "showGallerySegue",
+            let imageGallery = segue.destination as? ImageGalleryViewController else { return }
+        let selectedAnnotation = mapView.selectedAnnotations[0]
+        imageGallery.annotation = selectedAnnotation
+    }
+    
 }
 
 
@@ -71,6 +73,25 @@ extension InitialViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         saveMapState()
+    }
+    
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let pin = mapView.dequeueReusableAnnotationView(withIdentifier: "pin") {
+            pin.annotation = annotation
+            return pin
+        }
+        else {
+            let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "pin")
+            pin.animatesDrop = true
+            return pin
+        }
+    }
+
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        performSegue(withIdentifier: "showGallerySegue", sender: nil)
+        mapView.deselectAnnotation(view.annotation, animated: false) // keep after 'performSegue'
     }
 }
 

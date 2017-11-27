@@ -8,19 +8,39 @@
 
 import UIKit
 import CoreData
+import MapKit
+import CoreLocation
 
 
 class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
+    @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var imagesCollectionView: UICollectionView!
     private var photosArray = [Photo]()
     private var cellSize = CGSize(width: 80, height: 80)
+    private var coordinateToLoad: CLLocationCoordinate2D!
+    var annotation: MKAnnotation?
+    
+    func setLocationToLoad(_ coordinate: CLLocationCoordinate2D) {
+        self.coordinateToLoad = coordinate
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         imagesCollectionView.dataSource = self
         imagesCollectionView.delegate = self
         fetchAlbums()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let parent = parent as? UINavigationController {
+            parent.isNavigationBarHidden = false
+        }
+        if let annotation = annotation {
+            mapView.addAnnotation(annotation)
+            mapView.setCenter(annotation.coordinate, animated: false)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -46,11 +66,11 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     func fetchAlbums() {
 
         photosArray.removeAll()
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Album")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         do {
-            if let albums = try CoreDataStack.default.context.fetch(fetchRequest) as? [Album] {
-                let album = albums[0]
-                guard let photos = album.photos else { return }
+            if let pins = try CoreDataStack.default.context.fetch(fetchRequest) as? [Pin], pins.count > 0 {
+                let pin = pins[0]
+                guard let photos = pin.photos else { return }
                 for item in photos {
                     if let photo = item as? Photo {
                         photosArray.append(photo)

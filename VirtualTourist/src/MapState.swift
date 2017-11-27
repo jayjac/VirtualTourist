@@ -8,7 +8,8 @@
 
 import Foundation
 import MapKit
-
+import CoreLocation
+import CoreData
 
 enum CodingKey: String {
     case centerLatitude
@@ -65,5 +66,46 @@ struct MapStatePersistor {
         let mapState = MapState(coordinateRegion: region)
         let data = NSKeyedArchiver.archivedData(withRootObject: mapState)
         UserDefaults.standard.set(data, forKey: CodingKey.mapState.rawValue)
+    }
+    
+    static func addPin(at location: CLLocationCoordinate2D) {
+        let pin = Pin(context: CoreDataStack.default.context)
+        pin.latitude = location.latitude
+        pin.longitude = location.longitude
+        do {
+            try CoreDataStack.default.context.save()
+            print("added the pin")
+        } catch {
+            print("could not save the pin")
+        }
+    }
+    
+    static func retrievePins() -> [Pin]? {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        do {
+            guard let pins = try CoreDataStack.default.context.fetch(fetchRequest) as? [Pin] else { return nil }
+            return pins
+        } catch {
+            return nil
+        }
+    }
+    
+    static func removePin(from location: CLLocationCoordinate2D) {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        let longPredicate = NSPredicate(format: "longitude == %@", location.longitude)
+        let latPredicate = NSPredicate(format: "latitude == %@", location.latitude)
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [longPredicate, latPredicate])
+        fetchRequest.predicate = predicate
+        do {
+            if let pins = try CoreDataStack.default.context.fetch(fetchRequest) as? [Pin] {
+                for pin in pins {
+                    CoreDataStack.default.context.delete(pin)
+                }
+                try CoreDataStack.default.context.save()
+            }
+        } catch {
+            print("error deleting pin")
+        }
+        
     }
 }

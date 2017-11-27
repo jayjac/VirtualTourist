@@ -16,9 +16,10 @@ class PhotoDownloader {
     
     
     static func download(from location: CLLocationCoordinate2D) {
-        let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: CoreDataStack.default.context) as! Album
-        album.location = AlbumLocation(location: location)
-        album.creationDate = Date()
+        
+        let pin = Pin(context: CoreDataStack.default.context) // should remove this and
+        pin.setLocation(location)
+
         let latitude = location.latitude
         let longitude = location.longitude
         let url = FlickrAPI.searchURL(latitude: latitude, longitude: longitude)
@@ -30,7 +31,7 @@ class PhotoDownloader {
             }
             guard let photos = retrievePhotos(from: data) else { return }
             for p in photos {
-                let photo = NSEntityDescription.insertNewObject(forEntityName: "Photo", into: CoreDataStack.default.context) as! Photo
+                let photo = Photo(context: CoreDataStack.default.context)
                 let id = p["id"] as? String ?? "no id"
                 let secret = p["secret"] as? String ?? "no secret"
                 let server = p["server"] as? String ?? "no server"
@@ -40,9 +41,9 @@ class PhotoDownloader {
                 let data = try? Data.init(contentsOf: url)
                 print(url)
                 photo.data = data
-                photo.album = album
+                photo.pin = pin
                 photo.title = title
-                album.addToPhotos(photo)
+                pin.addToPhotos(photo)
             }
 
             do {
