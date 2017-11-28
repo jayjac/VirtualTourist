@@ -92,16 +92,18 @@ struct MapStatePersistor {
     
     static func removePin(from location: CLLocationCoordinate2D) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
-        let longPredicate = NSPredicate(format: "longitude == %@", location.longitude)
-        let latPredicate = NSPredicate(format: "latitude == %@", location.latitude)
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [longPredicate, latPredicate])
+        let latitudeNumber = NSNumber(floatLiteral: location.latitude)
+        let longitudeNumber = NSNumber(floatLiteral: location.longitude)
+        let predicate = NSPredicate(format: "longitude == %@ AND latitude == %@", longitudeNumber, latitudeNumber)
         fetchRequest.predicate = predicate
         do {
-            if let pins = try CoreDataStack.default.context.fetch(fetchRequest) as? [Pin] {
+            if let pins = try CoreDataStack.default.context.fetch(fetchRequest) as? [Pin], pins.count > 0 {
                 for pin in pins {
                     CoreDataStack.default.context.delete(pin)
                 }
-                try CoreDataStack.default.context.save()
+                CoreDataStack.default.save()
+                //try CoreDataStack.default.context.save()
+                print("pin was deleted successfully")
             }
         } catch {
             print("error deleting pin")

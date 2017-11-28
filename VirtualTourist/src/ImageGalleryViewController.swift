@@ -27,6 +27,10 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mapView.isScrollEnabled = false
+        mapView.isZoomEnabled = false
+        let editButton = UIBarButtonItem(title: "Delete", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem = editButton
         imagesCollectionView.dataSource = self
         imagesCollectionView.delegate = self
         fetchAlbums()
@@ -34,9 +38,6 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let parent = parent as? UINavigationController {
-            parent.isNavigationBarHidden = false
-        }
         if let annotation = annotation {
             mapView.addAnnotation(annotation)
             mapView.setCenter(annotation.coordinate, animated: false)
@@ -64,7 +65,6 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     
     
     func fetchAlbums() {
-
         photosArray.removeAll()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         do {

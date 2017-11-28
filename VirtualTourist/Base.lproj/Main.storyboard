@@ -17,19 +17,45 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="iSg-mh-ShT">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="iSg-mh-ShT">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHE-Ae-AK6" userLabel="Dismiss Button">
+                                <rect key="frame" x="0.0" y="607" width="375" height="60"/>
+                                <color key="backgroundColor" red="0.94058334830000001" green="0.57152521609999996" blue="0.2156203538" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="7oa-WH-hlG"/>
+                                </constraints>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Tap a pin to delete it. Tap here when done."/>
+                                <connections>
+                                    <action selector="dismissButtonWasTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ttN-3A-0YK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="iSg-mh-ShT" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="I5q-rQ-tfV"/>
+                            <constraint firstItem="iSg-mh-ShT" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Ptt-Kf-zjU"/>
+                            <constraint firstItem="bHE-Ae-AK6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="UJQ-gD-HzM"/>
+                            <constraint firstItem="iSg-mh-ShT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="a7i-kW-bsA"/>
+                            <constraint firstItem="iSg-mh-ShT" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="o7h-fb-hwx"/>
+                            <constraint firstItem="bHE-Ae-AK6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rqd-iF-8BM"/>
+                            <constraint firstAttribute="bottom" secondItem="bHE-Ae-AK6" secondAttribute="bottom" id="uhH-h6-pcO"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Virtual Tourist" id="10i-Vm-36h">
                         <barButtonItem key="backBarButtonItem" title="Home" id="kUb-Vn-21t"/>
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="p5J-up-Sjx"/>
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="p5J-up-Sjx">
+                            <connections>
+                                <action selector="editButtonWasTaped:" destination="BYZ-38-t0r" id="5Bm-5h-WlT"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="dismissButtonBottomConstraint" destination="uhH-h6-pcO" id="GiX-nI-GxG"/>
+                        <outlet property="editButton" destination="p5J-up-Sjx" id="08P-SR-g9J"/>
                         <outlet property="mapView" destination="iSg-mh-ShT" id="Q6C-du-Hw8"/>
                         <segue destination="w6o-nc-vxA" kind="show" identifier="showGallerySegue" id="vxq-1B-PX1"/>
                     </connections>

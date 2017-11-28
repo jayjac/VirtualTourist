@@ -49,6 +49,15 @@ class CoreDataStack {
        return ctx
     }()
     
+    
+    func save() {
+        do {
+            try context.save()
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
+    
 
     
     
