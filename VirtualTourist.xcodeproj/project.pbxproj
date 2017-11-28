@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E90B75131FC56D58002D9D4E /* PinExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B75121FC56D58002D9D4E /* PinExtension.swift */; };
+		E90B75951FCD9027002D9D4E /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B75941FCD9027002D9D4E /* ImageCell.swift */; };
 		E90D76B61FA076540073080E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E90D76B41FA076540073080E /* Main.storyboard */; };
 		E90D76B81FA076540073080E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E90D76B71FA076540073080E /* Assets.xcassets */; };
 		E90D76BB1FA076540073080E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E90D76B91FA076540073080E /* LaunchScreen.storyboard */; };
@@ -21,7 +22,6 @@
 		E9641FA81FB4B40200D3AFF8 /* FlickrAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9641FA71FB4B40200D3AFF8 /* FlickrAPI.swift */; };
 		E9910A751FBED7BA0083F39D /* PhotoDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9910A741FBED7BA0083F39D /* PhotoDownloader.swift */; };
 		E9910A771FC0AAAD0083F39D /* ImageGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9910A761FC0AAAD0083F39D /* ImageGalleryViewController.swift */; };
-		E9910A791FC0AB5D0083F39D /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9910A781FC0AB5D0083F39D /* ImageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +43,7 @@
 
 /* Begin PBXFileReference section */
 		E90B75121FC56D58002D9D4E /* PinExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PinExtension.swift; path = src/PinExtension.swift; sourceTree = "<group>"; };
+		E90B75941FCD9027002D9D4E /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCell.swift; path = src/ImageCell.swift; sourceTree = "<group>"; };
 		E90D76AD1FA076540073080E /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E90D76B51FA076540073080E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E90D76B71FA076540073080E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -63,7 +64,6 @@
 		E9641FA71FB4B40200D3AFF8 /* FlickrAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FlickrAPI.swift; path = src/FlickrAPI.swift; sourceTree = "<group>"; };
 		E9910A741FBED7BA0083F39D /* PhotoDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhotoDownloader.swift; path = src/PhotoDownloader.swift; sourceTree = "<group>"; };
 		E9910A761FC0AAAD0083F39D /* ImageGalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageGalleryViewController.swift; path = src/ImageGalleryViewController.swift; sourceTree = "<group>"; };
-		E9910A781FC0AB5D0083F39D /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,9 +148,9 @@
 		E9641F961FB456FB00D3AFF8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				E90B75941FCD9027002D9D4E /* ImageCell.swift */,
 				E9641F981FB4571500D3AFF8 /* InitialViewController.swift */,
 				E9910A761FC0AAAD0083F39D /* ImageGalleryViewController.swift */,
-				E9910A781FC0AB5D0083F39D /* ImageCell.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -319,7 +319,7 @@
 				E9910A771FC0AAAD0083F39D /* ImageGalleryViewController.swift in Sources */,
 				E9641F9F1FB4576600D3AFF8 /* Model.xcdatamodeld in Sources */,
 				E9641FA31FB4577400D3AFF8 /* MapState.swift in Sources */,
-				E9910A791FC0AB5D0083F39D /* ImageCell.swift in Sources */,
+				E90B75951FCD9027002D9D4E /* ImageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
