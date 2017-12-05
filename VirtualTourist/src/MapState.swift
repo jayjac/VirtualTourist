@@ -74,6 +74,7 @@ struct MapStatePersistor {
         pin.longitude = location.longitude
         do {
             try CoreDataStack.default.context.save()
+            PhotoDownloader.retrievePhotoMetaData(for: pin)
             print("added the pin")
         } catch {
             print("could not save the pin")

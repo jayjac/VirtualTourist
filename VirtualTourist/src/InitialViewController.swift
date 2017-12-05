@@ -17,7 +17,7 @@ class InitialViewController: UIViewController {
     @IBOutlet weak var dismissButtonBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var editButton: UIBarButtonItem!
     private var isDeletingMode = false
-    
+    private let toggleDuration = 0.15
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +36,7 @@ class InitialViewController: UIViewController {
         isDeletingMode = !isDeletingMode
         dismissButtonBottomConstraint.constant = isDeletingMode ? 0.0 : -60.0
         editButton.title = isDeletingMode ? "Done" : "Edit"
-        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: toggleDuration, delay: 0.0, options: [.curveEaseOut], animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -81,9 +81,11 @@ class InitialViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "showGallerySegue",
+            mapView.selectedAnnotations.count > 0,
             let imageGallery = segue.destination as? ImageGalleryViewController else { return }
         let selectedAnnotation = mapView.selectedAnnotations[0]
         imageGallery.annotation = selectedAnnotation
+        mapView.deselectAnnotation(selectedAnnotation, animated: false)
     }
     
 }
@@ -108,19 +110,20 @@ extension InitialViewController: MKMapViewDelegate {
         }
     }
 
-    
+    /**
+     When a pin is pressed, either remove it if we are in 'deleting' mode or show the gallery associated with it
+     */
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let annotation = view.annotation else {
             fatalError("No annotation attached to annotationView")
         }
         if isDeletingMode {
-            MapStatePersistor.removePin(from: annotation.coordinate)
             mapView.removeAnnotation(annotation)
+            MapStatePersistor.removePin(from: annotation.coordinate)
         } else {
             performSegue(withIdentifier: "showGallerySegue", sender: nil)
-            mapView.deselectAnnotation(annotation, animated: false) // keep after 'performSegue'
         }
-
     }
+    
 }
 
