@@ -29,6 +29,9 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
         super.viewDidLoad()
         mapView.isScrollEnabled = false
         mapView.isZoomEnabled = false
+        
+        //TODO: add the delete capability
+        // if not in delete mode, just open up in full screen and swipe thru pager-style
         let editButton = UIBarButtonItem(title: "Delete", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem = editButton
         imagesCollectionView.dataSource = self
@@ -42,6 +45,10 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
             mapView.addAnnotation(annotation)
             mapView.setCenter(annotation.coordinate, animated: false)
         }
+    }
+    
+    private func retrievePin() {
+        
     }
     
     override func viewDidLayoutSubviews() {
