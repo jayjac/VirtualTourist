@@ -129,4 +129,9 @@ struct DataPersistor {
         CoreDataStack.default.save()
     }
     
+    static func deletePhoto(_ photo: Photo) {
+        CoreDataStack.default.context.delete(photo)
+        CoreDataStack.default.save()
+    }
+    
 }
