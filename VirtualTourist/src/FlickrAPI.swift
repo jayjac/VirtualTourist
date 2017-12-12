@@ -14,7 +14,7 @@ struct FlickrAPI {
     static let key = "30ea6c99243c8de780e96f54608709ae"
     
     static func photoURL(farmId: Int, serverId: String, photoId: String, secret: String) -> URL {
-        let urlString = "https://farm\(farmId).staticflickr.com/\(serverId)/\(photoId)_\(secret).jpg"
+        let urlString = "https://farm\(farmId).staticflickr.com/\(serverId)/\(photoId)_\(secret)_z.jpg"
         let url = URL(string: urlString)!
         return url
     }

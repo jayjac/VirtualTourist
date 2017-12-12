@@ -123,4 +123,10 @@ struct DataPersistor {
         print("saved photo meta")
     }
     
+    
+    static func updatePhoto(_ photo: Photo, with data: Data) {
+        photo.data = data
+        CoreDataStack.default.save()
+    }
+    
 }

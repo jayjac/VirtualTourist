@@ -14,6 +14,7 @@ import CoreLocation
 
 class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
+    @IBOutlet weak var newCollectionButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var imagesCollectionView: UICollectionView!
     private var photosArray = [Photo]()
@@ -36,13 +37,22 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
 
     }
     
+    
+    @IBAction func newCollectionButtonWasTapped(_ sender: Any) {
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard let annotation = annotation else { return }
         mapView.addAnnotation(annotation)
         mapView.setCenter(annotation.coordinate, animated: false)
-        PhotoDownloader.downloadPhotosMetaData(for: annotation.coordinate)
-        guard let photos = DataPersistor.retrievePhotoArray(from: annotation.coordinate) else { return }
+        refreshPhotos(at: annotation.coordinate)
+    }
+    
+    
+    func refreshPhotos(at coordinate: CLLocationCoordinate2D) {
+        guard let photos = DataPersistor.retrievePhotoArray(from: coordinate) else { return }
         photosArray = photos
         imagesCollectionView.reloadData()
     }
@@ -77,17 +87,31 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! ImageCell
-        let photo = photosArray[indexPath.row]
-        if let data = photo.data, let image = UIImage(data: data) {
-            cell.imageView.image = image
-            cell.label.text = photo.title
-        } else {
-            cell.imageView.image = UIImage(named: "placeholder")
+        let index = indexPath.row
+        let photo = photosArray[index]
+        cell.setupCell(with: photo.data, title: photo.title)
+        if photo.data == nil {
+            PhotoDownloader.downloadPhoto(photo, at: index, notify: self)
         }
-
         return cell
     }
 
+}
 
 
+extension ImageGalleryViewController: PhotoDownloadDelegate {
+    
+    func photoDownloadDidComplete(at index: Int) {
+        print("photo downloaded at index \(index)")
+        let indexPath = IndexPath(row: index, section: 0)
+        imagesCollectionView.reloadItems(at: [indexPath])
+    }
+    
+    func photoDownloadFailed(with message: String) {
+        
+    }
+    
+    func photoMetaRetrieved() {
+
+    }
 }

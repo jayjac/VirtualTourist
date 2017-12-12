@@ -11,6 +11,14 @@ import CoreLocation
 import CoreData
 
 
+protocol PhotoDownloadDelegate {
+    
+    func photoDownloadDidComplete(at index: Int)
+    func photoDownloadFailed(with message: String)
+
+}
+
+
 
 class PhotoDownloader {
     
@@ -49,6 +57,7 @@ class PhotoDownloader {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                     let photoPage = json["photos"] as? [String: Any], let photos = photoPage["photo"] as? [[String: Any]] {
+                    print(json)
                     return photos
                 }
             } catch {}
@@ -56,10 +65,31 @@ class PhotoDownloader {
         return nil
     }
     
-    static func downloadOnePhoto(from url: URL) {
-        
+    static func downloadPhoto(_ photo: Photo, at index: Int, notify delegate: PhotoDownloadDelegate) {
+        guard let url = photo.photoURL else {
+            DispatchQueue.main.async {
+                delegate.photoDownloadFailed(with: "No URL provided for Photo at index \(index)")
+            }
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                DispatchQueue.main.async {
+                    delegate.photoDownloadFailed(with: error.localizedDescription)
+                }
+                return
+            }
+            if let response = response as? HTTPURLResponse, response.statusCode == 200, let data = data {
+                DataPersistor.updatePhoto(photo, with: data)
+                DispatchQueue.main.async {
+                    delegate.photoDownloadDidComplete(at: index)
+                }
+                
+            }
+        }
+        task.resume()
     }
 
-    
-
 }
+
+

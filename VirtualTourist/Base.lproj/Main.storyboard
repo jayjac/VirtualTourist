@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PBl-xc-1F2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PBl-xc-1F2">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -72,8 +72,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="tYG-cy-IFn">
-                                <rect key="frame" x="0.0" y="190" width="375" height="477"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="tYG-cy-IFn">
+                                <rect key="frame" x="0.0" y="190" width="375" height="421"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="9ZY-7I-7Am">
                                     <size key="itemSize" width="163" height="143"/>
@@ -99,18 +99,24 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="R0I-06-osy">
+                                                    <rect key="frame" x="71" y="61" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="zMV-R8-Gs5" firstAttribute="leading" secondItem="4eR-8W-Yg3" secondAttribute="leading" id="26W-cO-nc6"/>
                                             <constraint firstItem="heh-EZ-CPZ" firstAttribute="top" secondItem="4eR-8W-Yg3" secondAttribute="top" id="9Cf-KH-PGI"/>
                                             <constraint firstAttribute="bottom" secondItem="heh-EZ-CPZ" secondAttribute="bottom" id="9JN-Gr-CdY"/>
+                                            <constraint firstItem="R0I-06-osy" firstAttribute="centerX" secondItem="4eR-8W-Yg3" secondAttribute="centerX" id="B6I-Fy-u00"/>
                                             <constraint firstItem="heh-EZ-CPZ" firstAttribute="leading" secondItem="4eR-8W-Yg3" secondAttribute="leading" id="Zmc-fb-tqW"/>
                                             <constraint firstAttribute="trailing" secondItem="zMV-R8-Gs5" secondAttribute="trailing" id="hXz-I9-4z5"/>
                                             <constraint firstAttribute="trailing" secondItem="heh-EZ-CPZ" secondAttribute="trailing" id="hcZ-Tn-BSS"/>
+                                            <constraint firstItem="R0I-06-osy" firstAttribute="centerY" secondItem="4eR-8W-Yg3" secondAttribute="centerY" id="m6R-kP-JDK"/>
                                             <constraint firstAttribute="bottom" secondItem="zMV-R8-Gs5" secondAttribute="bottom" id="yRb-oS-hFN"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="activityIndicator" destination="R0I-06-osy" id="Ey4-PC-HHI"/>
                                             <outlet property="imageView" destination="heh-EZ-CPZ" id="ljO-tg-yeJ"/>
                                             <outlet property="label" destination="zMV-R8-Gs5" id="9zE-N3-TOH"/>
                                         </connections>
@@ -123,27 +129,42 @@
                                     <constraint firstAttribute="height" constant="126" id="0yz-1N-971"/>
                                 </constraints>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nXS-Un-IsC">
+                                <rect key="frame" x="0.0" y="612" width="375" height="55"/>
+                                <color key="backgroundColor" red="0.043713553970155861" green="1" blue="0.00693619371499965" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="tfR-pQ-RvM"/>
+                                </constraints>
+                                <state key="normal" title="New collection"/>
+                                <connections>
+                                    <action selector="newCollectionButtonWasTapped:" destination="w6o-nc-vxA" eventType="touchUpInside" id="lVi-D1-0O5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="qn8-Rx-z12" firstAttribute="top" secondItem="smh-XB-G3S" secondAttribute="top" id="9Ff-Df-VvC"/>
                             <constraint firstItem="tYG-cy-IFn" firstAttribute="top" secondItem="qn8-Rx-z12" secondAttribute="bottom" id="DTp-2V-hIn"/>
                             <constraint firstItem="tYG-cy-IFn" firstAttribute="leading" secondItem="smh-XB-G3S" secondAttribute="leading" id="EwG-PE-Axe"/>
+                            <constraint firstItem="nXS-Un-IsC" firstAttribute="leading" secondItem="smh-XB-G3S" secondAttribute="leading" id="Jzf-Ux-KYh"/>
                             <constraint firstItem="qn8-Rx-z12" firstAttribute="trailing" secondItem="smh-XB-G3S" secondAttribute="trailing" id="P7t-Ga-JvQ"/>
                             <constraint firstItem="tYG-cy-IFn" firstAttribute="trailing" secondItem="smh-XB-G3S" secondAttribute="trailing" id="TAK-qT-xQJ"/>
-                            <constraint firstItem="tYG-cy-IFn" firstAttribute="bottom" secondItem="smh-XB-G3S" secondAttribute="bottom" id="g9c-cc-dze"/>
+                            <constraint firstItem="nXS-Un-IsC" firstAttribute="top" secondItem="tYG-cy-IFn" secondAttribute="bottom" constant="1" id="Zu9-lY-gT5"/>
+                            <constraint firstItem="nXS-Un-IsC" firstAttribute="bottom" secondItem="smh-XB-G3S" secondAttribute="bottom" id="aoL-xG-YQA"/>
                             <constraint firstItem="qn8-Rx-z12" firstAttribute="leading" secondItem="smh-XB-G3S" secondAttribute="leading" id="lPR-Rf-3Gh"/>
+                            <constraint firstItem="nXS-Un-IsC" firstAttribute="trailing" secondItem="smh-XB-G3S" secondAttribute="trailing" id="mzj-8b-7xu"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="smh-XB-G3S"/>
                     </view>
                     <connections>
                         <outlet property="imagesCollectionView" destination="tYG-cy-IFn" id="Vv5-G3-jFe"/>
                         <outlet property="mapView" destination="qn8-Rx-z12" id="wdq-8q-WJz"/>
+                        <outlet property="newCollectionButton" destination="nXS-Un-IsC" id="v3i-0K-COc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DiX-8K-kLr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1292" y="134"/>
+            <point key="canvasLocation" x="1292" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="7Kh-gN-dRx">
