@@ -18,12 +18,9 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var imagesCollectionView: UICollectionView!
     private var photosArray = [Photo]()
     private var cellSize = CGSize(width: 80, height: 80)
-    private var coordinateToLoad: CLLocationCoordinate2D!
     var annotation: MKAnnotation?
     
-    func setLocationToLoad(_ coordinate: CLLocationCoordinate2D) {
-        self.coordinateToLoad = coordinate
-    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,20 +33,21 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
         self.navigationItem.rightBarButtonItem = editButton
         imagesCollectionView.dataSource = self
         imagesCollectionView.delegate = self
-        fetchAlbums()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let annotation = annotation {
-            mapView.addAnnotation(annotation)
-            mapView.setCenter(annotation.coordinate, animated: false)
-        }
+        guard let annotation = annotation else { return }
+        mapView.addAnnotation(annotation)
+        mapView.setCenter(annotation.coordinate, animated: false)
+        PhotoDownloader.downloadPhotosMetaData(for: annotation.coordinate)
+        guard let photos = DataPersistor.retrievePhotoArray(from: annotation.coordinate) else { return }
+        photosArray = photos
+        imagesCollectionView.reloadData()
     }
     
-    private func retrievePin() {
-        
-    }
+
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -71,26 +69,7 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     
-    func fetchAlbums() {
-        photosArray.removeAll()
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
-        do {
-            if let pins = try CoreDataStack.default.context.fetch(fetchRequest) as? [Pin], pins.count > 0 {
-                let pin = pins[0]
-                guard let photos = pin.photos else { return }
-                for item in photos {
-                    if let photo = item as? Photo {
-                        photosArray.append(photo)
-                    }
-                }
-                imagesCollectionView.reloadData()
-            }
-            
-        }
-        catch let error {
-            print(error.localizedDescription)
-        }
-    }
+
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photosArray.count
@@ -102,6 +81,8 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
         if let data = photo.data, let image = UIImage(data: data) {
             cell.imageView.image = image
             cell.label.text = photo.title
+        } else {
+            cell.imageView.image = UIImage(named: "placeholder")
         }
 
         return cell

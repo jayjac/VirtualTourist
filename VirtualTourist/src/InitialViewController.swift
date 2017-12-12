@@ -23,7 +23,7 @@ class InitialViewController: UIViewController {
         super.viewDidLoad()
         setupMap()
         dismissButtonBottomConstraint.constant = -60.0
-        if let pins = MapStatePersistor.retrievePins() {
+        if let pins = DataPersistor.retrievePins() {
             for pin in pins {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
@@ -76,7 +76,8 @@ class InitialViewController: UIViewController {
         let annotation = MKPointAnnotation()
         annotation.coordinate = location
         mapView.addAnnotation(annotation)
-        MapStatePersistor.addPin(at: location)
+        DataPersistor.addPin(at: location)
+        PhotoDownloader.downloadPhotosMetaData(for: location)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -119,7 +120,7 @@ extension InitialViewController: MKMapViewDelegate {
         }
         if isDeletingMode {
             mapView.removeAnnotation(annotation)
-            MapStatePersistor.removePin(from: annotation.coordinate)
+            DataPersistor.removePin(from: annotation.coordinate)
         } else {
             performSegue(withIdentifier: "showGallerySegue", sender: nil)
         }
