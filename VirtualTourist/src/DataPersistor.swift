@@ -51,7 +51,7 @@ struct DataPersistor {
     
     static func removeAllPhotos(_ photos: [Photo]) {
         for photo in photos {
-            print("deleting photo")
+            //print("deleting photo")
             CoreDataStack.default.context.delete(photo)
         }
         CoreDataStack.default.save()
@@ -123,7 +123,7 @@ struct DataPersistor {
             photo.pin = pin
             photo.title = title
             pin.addToPhotos(photo)
-            print(url)
+            //print(url)
         }
         CoreDataStack.default.save()
         DispatchQueue.main.async {
@@ -139,6 +139,9 @@ struct DataPersistor {
     }
     
     static func deletePhoto(_ photo: Photo) {
+        if let pin = photo.pin {
+            pin.removeFromPhotos(photo)
+        }
         CoreDataStack.default.context.delete(photo)
         CoreDataStack.default.save()
     }

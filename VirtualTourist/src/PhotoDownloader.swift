@@ -42,7 +42,7 @@ class PhotoDownloader {
                     print(error.localizedDescription)
                     return
                 }
-                guard let photosArray = retrievePhotos(from: data) else { return }
+                guard let photosArray = parsePhotoArray(from: data) else { return }
                 DataPersistor.addPhotos(photosArray, to: pin)
             })
             task.resume()
@@ -52,12 +52,13 @@ class PhotoDownloader {
     /*
      Returns a JSON array from the Flickr data
      */
-    static func retrievePhotos(from data: Data?) -> [[String: Any]]? {
+    static func parsePhotoArray(from data: Data?) -> [[String: Any]]? {
         if let data = data {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                    let photoPage = json["photos"] as? [String: Any], let photos = photoPage["photo"] as? [[String: Any]] {
-                    print(json)
+                    let photoPage = json["photos"] as? [String: Any],
+                    let photos = photoPage["photo"] as? [[String: Any]] {
+                    //print(json)
                     return photos
                 }
             } catch {}
@@ -84,7 +85,6 @@ class PhotoDownloader {
                 DispatchQueue.main.async {
                     delegate.photoDownloadDidComplete(at: index)
                 }
-                
             }
         }
         task.resume()
