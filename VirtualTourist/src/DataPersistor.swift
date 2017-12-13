@@ -49,6 +49,14 @@ struct DataPersistor {
         }
     }
     
+    static func removeAllPhotos(_ photos: [Photo]) {
+        for photo in photos {
+            print("deleting photo")
+            CoreDataStack.default.context.delete(photo)
+        }
+        CoreDataStack.default.save()
+    }
+    
     static func removePin(from location: CLLocationCoordinate2D) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         let latitudeNumber = NSNumber(floatLiteral: location.latitude)
@@ -81,9 +89,7 @@ struct DataPersistor {
                 return pins[0]
             }
         }
-        catch {
-            
-        }
+        catch { }
         return nil
     }
     
@@ -120,7 +126,10 @@ struct DataPersistor {
             print(url)
         }
         CoreDataStack.default.save()
-        print("saved photo meta")
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .photosMetaRetrieved, object: nil)
+        }
+        
     }
     
     

@@ -13,16 +13,20 @@ class ImageCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet var placeholderImageView: UIImageView!
     
     
     func setupCell(with data: Data?, title: String?) {
         activityIndicator.hidesWhenStopped = true
         if let data = data {
+            placeholderImageView.isHidden = true
             imageView.image = UIImage(data: data)
             label.text = title
             activityIndicator.stopAnimating()
         } else {
-            imageView.image = UIImage(named: "placeholder")
+            placeholderImageView.isHidden = false
+            placeholderImageView.image = UIImage(named: "placeholder")
+            imageView.image = nil
             label.text = ""
             activityIndicator.startAnimating()
         }

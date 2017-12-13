@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PBl-xc-1F2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PBl-xc-1F2">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -102,10 +102,18 @@
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="R0I-06-osy">
                                                     <rect key="frame" x="71" y="61" width="20" height="20"/>
                                                 </activityIndicatorView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pcE-Bb-zyo">
+                                                    <rect key="frame" x="53.5" y="0.0" width="55" height="55"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="55" id="7Jr-IS-GBA"/>
+                                                        <constraint firstAttribute="width" constant="55" id="Fu3-kN-Adb"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="zMV-R8-Gs5" firstAttribute="leading" secondItem="4eR-8W-Yg3" secondAttribute="leading" id="26W-cO-nc6"/>
+                                            <constraint firstItem="pcE-Bb-zyo" firstAttribute="top" secondItem="4eR-8W-Yg3" secondAttribute="top" id="6tJ-fY-ZGv"/>
                                             <constraint firstItem="heh-EZ-CPZ" firstAttribute="top" secondItem="4eR-8W-Yg3" secondAttribute="top" id="9Cf-KH-PGI"/>
                                             <constraint firstAttribute="bottom" secondItem="heh-EZ-CPZ" secondAttribute="bottom" id="9JN-Gr-CdY"/>
                                             <constraint firstItem="R0I-06-osy" firstAttribute="centerX" secondItem="4eR-8W-Yg3" secondAttribute="centerX" id="B6I-Fy-u00"/>
@@ -113,12 +121,14 @@
                                             <constraint firstAttribute="trailing" secondItem="zMV-R8-Gs5" secondAttribute="trailing" id="hXz-I9-4z5"/>
                                             <constraint firstAttribute="trailing" secondItem="heh-EZ-CPZ" secondAttribute="trailing" id="hcZ-Tn-BSS"/>
                                             <constraint firstItem="R0I-06-osy" firstAttribute="centerY" secondItem="4eR-8W-Yg3" secondAttribute="centerY" id="m6R-kP-JDK"/>
+                                            <constraint firstItem="pcE-Bb-zyo" firstAttribute="centerX" secondItem="4eR-8W-Yg3" secondAttribute="centerX" id="my7-xO-Zvx"/>
                                             <constraint firstAttribute="bottom" secondItem="zMV-R8-Gs5" secondAttribute="bottom" id="yRb-oS-hFN"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="activityIndicator" destination="R0I-06-osy" id="Ey4-PC-HHI"/>
                                             <outlet property="imageView" destination="heh-EZ-CPZ" id="ljO-tg-yeJ"/>
                                             <outlet property="label" destination="zMV-R8-Gs5" id="9zE-N3-TOH"/>
+                                            <outlet property="placeholderImageView" destination="pcE-Bb-zyo" id="dAW-yJ-Sx6"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -165,6 +175,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DiX-8K-kLr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1292" y="133.5832083958021"/>
+        </scene>
+        <!--Single Photo View Controller-->
+        <scene sceneID="GHx-Gf-Oiz">
+            <objects>
+                <viewController id="eOh-ch-jvd" customClass="SinglePhotoViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="00O-AC-6IB">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yIK-Ki-FR4">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="yIK-Ki-FR4" firstAttribute="bottom" secondItem="6qW-Pj-cli" secondAttribute="bottom" id="BWy-fB-ncu"/>
+                            <constraint firstItem="yIK-Ki-FR4" firstAttribute="trailing" secondItem="6qW-Pj-cli" secondAttribute="trailing" id="bF5-4m-x7e"/>
+                            <constraint firstItem="yIK-Ki-FR4" firstAttribute="leading" secondItem="6qW-Pj-cli" secondAttribute="leading" id="rrs-Qz-sz9"/>
+                            <constraint firstItem="yIK-Ki-FR4" firstAttribute="top" secondItem="00O-AC-6IB" secondAttribute="top" id="v4h-oK-pjv"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6qW-Pj-cli"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gn4-JJ-CFW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2176.8000000000002" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="7Kh-gN-dRx">

@@ -20,7 +20,7 @@ struct FlickrAPI {
     }
     
     static func searchURL(latitude: CLLocationDegrees, longitude: CLLocationDegrees) -> URL {
-        let queryString = "?api_key=\(FlickrAPI.key)&format=json&nojsoncallback=1&per_page=50&method=flickr.photos.search&lon=\(longitude)&lat=\(latitude)"
+        let queryString = "?api_key=\(FlickrAPI.key)&format=json&nojsoncallback=1&per_page=60&method=flickr.photos.search&lon=\(longitude)&lat=\(latitude)"
         let url = URL(string: endPoint + queryString)!
         return url
     }
