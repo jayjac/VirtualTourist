@@ -19,6 +19,8 @@ class InitialViewController: UIViewController {
     private var isDeletingMode = false
     private let toggleDuration = 0.15
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMap()
@@ -31,6 +33,8 @@ class InitialViewController: UIViewController {
             }
         }
     }
+    
+
     
     private func toggleEditButton() {
         isDeletingMode = !isDeletingMode

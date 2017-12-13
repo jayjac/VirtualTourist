@@ -28,13 +28,8 @@ class PhotoDownloader {
      Image data can be downloaded at a later time, when the user has internet access
      */
     static func downloadPhotosMetaData(for location: CLLocationCoordinate2D) {
-        guard let pin = DataPersistor.retrievePin(from: location) else { return }
-        if let photos = pin.photos, photos.count > 0 {
-            print("already have photos, no need to download any more")
-            return
-        }
-        let queue = DispatchQueue.global(qos: .background)
-        queue.async {
+        let backgroundQueue = DispatchQueue.global(qos: .background)
+        backgroundQueue.async {
             let url = FlickrAPI.searchURL(latitude: location.latitude, longitude: location.longitude)
             let session = URLSession.shared
             let task = session.dataTask(with: url, completionHandler: { (data, response, error) in
@@ -43,10 +38,26 @@ class PhotoDownloader {
                     return
                 }
                 guard let photosArray = parsePhotoArray(from: data) else { return }
-                DataPersistor.addPhotos(photosArray, to: pin)
+                let randomArray = randomizedPhotosArray(photosArray)
+                DataPersistor.addPhotos(randomArray, to: location)
             })
             task.resume()
         }
+    }
+    
+    /*
+     * Get 60 random pictures from the returned pictures
+     */
+    static func randomizedPhotosArray(_ photos: [[String: Any]]) -> [[String: Any]] {
+        var randomArray = [[String: Any]]()
+        var arrayCopy = photos
+        for _ in 0..<60 {
+            let length = UInt32(arrayCopy.count)
+            let random = Int(arc4random_uniform(length))
+            let element = arrayCopy.remove(at: random)
+            randomArray.append(element)
+        }
+        return randomArray
     }
     
     /*
@@ -67,6 +78,10 @@ class PhotoDownloader {
     }
     
     static func downloadPhoto(_ photo: Photo, at index: Int, notify delegate: PhotoDownloadDelegate) {
+        guard let pin = photo.pin, !pin.isDeleted else {
+            print("pin wass deleted so canceling download of photos")
+            return
+        }
         guard let url = photo.photoURL else {
             DispatchQueue.main.async {
                 delegate.photoDownloadFailed(with: "No URL provided for Photo at index \(index)")

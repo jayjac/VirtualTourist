@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PBl-xc-1F2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PBl-xc-1F2">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -170,6 +170,7 @@
                         <outlet property="imagesCollectionView" destination="tYG-cy-IFn" id="Vv5-G3-jFe"/>
                         <outlet property="mapView" destination="qn8-Rx-z12" id="wdq-8q-WJz"/>
                         <outlet property="newCollectionButton" destination="nXS-Un-IsC" id="v3i-0K-COc"/>
+                        <segue destination="eOh-ch-jvd" kind="show" identifier="SinglePhotoSegue" id="CiJ-hX-wDh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DiX-8K-kLr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -188,7 +189,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="yIK-Ki-FR4" firstAttribute="bottom" secondItem="6qW-Pj-cli" secondAttribute="bottom" id="BWy-fB-ncu"/>
                             <constraint firstItem="yIK-Ki-FR4" firstAttribute="trailing" secondItem="6qW-Pj-cli" secondAttribute="trailing" id="bF5-4m-x7e"/>
@@ -197,6 +198,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6qW-Pj-cli"/>
                     </view>
+                    <connections>
+                        <outlet property="imageView" destination="yIK-Ki-FR4" id="O0J-T7-tbh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gn4-JJ-CFW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

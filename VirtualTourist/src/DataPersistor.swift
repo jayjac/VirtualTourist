@@ -31,12 +31,7 @@ struct DataPersistor {
         let pin = Pin(context: CoreDataStack.default.context)
         pin.latitude = location.latitude
         pin.longitude = location.longitude
-        do {
-            try CoreDataStack.default.context.save()
-        } catch {
-            //TODO: handle the error to let the user know
-            print("could not save the pin")
-        }
+        CoreDataStack.default.save()
     }
     
     static func retrievePins() -> [Pin]? {
@@ -51,8 +46,8 @@ struct DataPersistor {
     
     static func removeAllPhotos(_ photos: [Photo]) {
         for photo in photos {
-            //print("deleting photo")
             CoreDataStack.default.context.delete(photo)
+            print("deleting photo")
         }
         CoreDataStack.default.save()
     }
@@ -93,6 +88,7 @@ struct DataPersistor {
         return nil
     }
     
+    
     static func retrievePhotoArray(from location: CLLocationCoordinate2D) -> [Photo]? {
         let photoRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
         let predicate = NSPredicate(format: "pin.latitude == %lf AND pin.longitude == %lf", location.latitude, location.longitude)
@@ -101,41 +97,49 @@ struct DataPersistor {
             if let results = try CoreDataStack.default.context.fetch(photoRequest) as? [Photo] {
                 return results
             }
-            else {
-                return nil
-            }
-        } catch {
-            return nil
-        }
+        } catch {}
+        return nil
     }
     
     
-    static func addPhotos(_ photosArray: [[String: Any]], to pin: Pin) {
-        for photoJSON in photosArray {
-            let photo = Photo(context: CoreDataStack.default.context)
-            let id = photoJSON["id"] as? String ?? "no id"
-            let secret = photoJSON["secret"] as? String ?? "no secret"
-            let server = photoJSON["server"] as? String ?? "no server"
-            let farm = photoJSON["farm"] as? Int ?? -1
-            let title = photoJSON["title"] as? String ?? "no title"
-            let url = FlickrAPI.photoURL(farmId: farm, serverId: server, photoId: id, secret: secret)
-            photo.photoURL = url
-            photo.pin = pin
-            photo.title = title
-            pin.addToPhotos(photo)
-            //print(url)
-        }
-        CoreDataStack.default.save()
+    static func addPhotos(_ photosArray: [[String: Any]], to location: CLLocationCoordinate2D) {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .photosMetaRetrieved, object: nil)
+            guard let pin = retrievePin(from: location) else { return }
+            for photoJSON in photosArray {
+                guard !pin.isDeleted else {
+                    print("pin was deleted before metadata could be saved")
+                    return
+                }
+                let photo = Photo(context: CoreDataStack.default.context)
+                let id = photoJSON["id"] as? String ?? "no id"
+                let secret = photoJSON["secret"] as? String ?? "no secret"
+                let server = photoJSON["server"] as? String ?? "no server"
+                let farm = photoJSON["farm"] as? Int ?? -1
+                let title = photoJSON["title"] as? String ?? "no title"
+                let url = FlickrAPI.photoURL(farmId: farm, serverId: server, photoId: id, secret: secret)
+                photo.photoURL = url
+                photo.pin = pin
+                photo.title = title
+                if !pin.isDeleted {
+                    pin.addToPhotos(photo)
+                    CoreDataStack.default.save()
+                }
+            }
+            NotificationCenter.default.post(name: .photosMetaRetrieved, object: pin)
         }
         
     }
     
     
     static func updatePhoto(_ photo: Photo, with data: Data) {
-        photo.data = data
-        CoreDataStack.default.save()
+        DispatchQueue.main.async {
+            if photo.isDeleted {
+                print("photo was deleted")
+                return
+            }
+            photo.data = data
+            CoreDataStack.default.save()
+        }
     }
     
     static func deletePhoto(_ photo: Photo) {

@@ -52,7 +52,7 @@ class CoreDataStack {
     
     func save() {
         do {
-            try context.save()
+            try self.context.save()
         } catch let error {
             print(error.localizedDescription)
         }

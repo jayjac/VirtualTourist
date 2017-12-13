@@ -24,16 +24,26 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var imagesCollectionView: UICollectionView!
     private var photosArray = [Photo]()
     private var cellSize = CGSize(width: 80, height: 80)
-    var annotation: MKAnnotation!
+    private let mapViewDelegate = ImageGalleryMapViewDelegate()
     private var isDeletingMode = false
     private var deleteButton: UIBarButtonItem!
+    private var selectedCellIndex: Int?
+    var location: CLLocationCoordinate2D!
+    var annotation: MKAnnotation! {
+        didSet {
+            location = annotation.coordinate
+        }
+    }
     
 
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.isScrollEnabled = false
         mapView.isZoomEnabled = false
+        mapView.delegate = mapViewDelegate
         newCollectionButton.isEnabled = false
         
         //TODO: add the delete capability
@@ -59,7 +69,7 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(photoMetaDetaWasRetrieved), name: .photosMetaRetrieved, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(photoMetaDetaWasRetrieved(notification:)), name: .photosMetaRetrieved, object: nil)
         guard let annotation = annotation else { return }
         mapView.addAnnotation(annotation)
         let coordinate = annotation.coordinate
@@ -73,16 +83,48 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func photoMetaDetaWasRetrieved() {
-        refreshPhotos()
+    @objc func photoMetaDetaWasRetrieved(notification: Notification) {
+        if let pin = notification.object as? Pin,
+            pin.latitude == location.latitude,
+            pin.longitude == location.longitude,
+            let photos = pin.photos {
+            if photos.count == 0 {
+                let alert = UIAlertController(title: "No photo", message: "There was no photo taken at that location", preferredStyle: .alert)
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                refreshPhotos()
+            }
+        }
     }
     
     
-    func refreshPhotos() {
+    private func refreshPhotos() {
         guard let photos = DataPersistor.retrievePhotoArray(from: annotation.coordinate) else { return }
         photosArray = photos
         imagesCollectionView.reloadData()
-        checkIfAllPhotosAreLoaded()
+        if photosArray.count > 0 {
+            for (index, photo) in photos.enumerated() {
+                if photo.data == nil {
+                    PhotoDownloader.downloadPhoto(photo, at: index, notify: self)
+                }
+            }
+            checkIfAllPhotosAreLoaded()
+            return
+        } else {
+            
+        }
+        
+    }
+    
+    private func checkIfAllPhotosAreLoaded() {
+        var loaded = true
+        for photo in photosArray {
+            if photo.data == nil {
+                loaded = false
+                break
+            }
+        }
+        newCollectionButton.isEnabled = loaded
     }
     
 
@@ -93,6 +135,16 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
         cellSize = CGSize(width: width, height: width)
     }
     
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "SinglePhotoSegue",
+            let selectedIndex = selectedCellIndex,
+            let photoData = photosArray[selectedIndex].data {
+            let singlePhotoVC = segue.destination as! SinglePhotoViewController
+            singlePhotoVC.photoData = photoData
+            selectedCellIndex = nil
+        }
+    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return cellSize
@@ -115,7 +167,8 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
             photosArray.remove(at: indexPath.row)
             imagesCollectionView.deleteItems(at: [indexPath])
         } else {
-            
+            selectedCellIndex = indexPath.row
+            performSegue(withIdentifier: "SinglePhotoSegue", sender: nil)
         }
     }
 
@@ -129,22 +182,10 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
         let index = indexPath.row
         let photo = photosArray[index]
         cell.setupCell(with: photo.data, title: photo.title)
-        if photo.data == nil {
-            PhotoDownloader.downloadPhoto(photo, at: index, notify: self)
-        }
         return cell
     }
     
-    func checkIfAllPhotosAreLoaded() {
-        var loaded = true
-        for photo in photosArray {
-            if photo.data == nil {
-                loaded = false
-                break
-            }
-        }
-        newCollectionButton.isEnabled = loaded
-    }
+
 
 }
 

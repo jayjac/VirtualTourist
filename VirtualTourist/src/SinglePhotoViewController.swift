@@ -10,10 +10,15 @@ import UIKit
 
 class SinglePhotoViewController: UIViewController {
 
+    @IBOutlet weak var imageView: UIImageView!
+    var photoData: Data?
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        guard let data = photoData else { return }
+        imageView.image = UIImage(data: data)
     }
 
 
