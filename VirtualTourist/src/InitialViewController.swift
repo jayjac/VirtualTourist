@@ -88,7 +88,7 @@ class InitialViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "showGallerySegue",
             mapView.selectedAnnotations.count > 0,
-            let imageGallery = segue.destination as? ImageGalleryViewController else { return }
+            let imageGallery = segue.destination as? PhotoAlbumViewController else { return }
         let selectedAnnotation = mapView.selectedAnnotations[0]
         imageGallery.annotation = selectedAnnotation
         mapView.deselectAnnotation(selectedAnnotation, animated: false)

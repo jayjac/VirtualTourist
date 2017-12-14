@@ -17,7 +17,7 @@ extension Notification.Name {
 }
 
 
-class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var newCollectionButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
@@ -34,6 +34,7 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
             location = annotation.coordinate
         }
     }
+    private var noPhotoAlert: UIAlertController?
 
     
     override func viewDidLoad() {
@@ -86,7 +87,6 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     private func setupMapAnnotation() {
-        //guard let annotation = annotation else { return }
         mapView.addAnnotation(annotation)
         mapView.setCenter(location, animated: false)
     }
@@ -103,6 +103,8 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
             }
         }
     }
+    
+
     
     
     private func refreshPhotos() {
@@ -122,13 +124,21 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
         }
         
     }
+
     
     private func showNoPhotoAlert() {
         let alert = UIAlertController(title: "No photo", message: "There was no photo taken at that location", preferredStyle: .alert)
+        noPhotoAlert = alert
         let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alert.addAction(okAction)
         self.present(alert, animated: true, completion: nil)
-        
+    }
+    
+    private func showErrorAlert(with message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func checkIfAllPhotosAreLoaded() {
@@ -145,10 +155,12 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     
 
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let width = view.bounds.width / 3 - 1
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        let viewWidth = view.bounds.width
+        let width = viewWidth > 400 ? (viewWidth / 4 - 1) : (viewWidth / 3 - 1)
         cellSize = CGSize(width: width, height: width)
+        imagesCollectionView.collectionViewLayout.invalidateLayout()
     }
     
     
@@ -206,7 +218,7 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
 }
 
 
-extension ImageGalleryViewController: PhotoDownloadDelegate {
+extension PhotoAlbumViewController: PhotoDownloadDelegate {
     
     func photoDownloadDidComplete(at index: Int) {
         let indexPath = IndexPath(row: index, section: 0)
@@ -215,7 +227,7 @@ extension ImageGalleryViewController: PhotoDownloadDelegate {
     }
     
     func photoDownloadFailed(with message: String) {
-        
+        showErrorAlert(with: message)
     }
 
 }

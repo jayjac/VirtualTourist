@@ -65,10 +65,10 @@
             </objects>
             <point key="canvasLocation" x="476" y="133.5832083958021"/>
         </scene>
-        <!--Image Gallery View Controller-->
+        <!--Photo Album View Controller-->
         <scene sceneID="ZgT-au-Q8V">
             <objects>
-                <viewController storyboardIdentifier="ImageGalleryViewController" id="w6o-nc-vxA" customClass="ImageGalleryViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImageGalleryViewController" id="w6o-nc-vxA" customClass="PhotoAlbumViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Szj-OK-hQD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
