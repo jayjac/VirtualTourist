@@ -10,8 +10,11 @@ import UIKit
 
 class SinglePhotoViewController: UIViewController {
 
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var imageView: UIImageView!
     var photoData: Data?
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -25,13 +28,19 @@ class SinglePhotoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.delegate = self
+        scrollView.zoomScale = 1.0
+        scrollView.minimumZoomScale = 1.0
+        scrollView.maximumZoomScale = 2.0
         guard let data = photoData else { return }
         imageView.image = UIImage(data: data)
     }
 
+}
 
+extension SinglePhotoViewController: UIScrollViewDelegate {
     
-
-
-
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return imageView
+    }
 }

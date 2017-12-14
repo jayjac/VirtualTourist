@@ -207,21 +207,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yIK-Ki-FR4">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NF3-9A-kzh">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yIK-Ki-FR4">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="yIK-Ki-FR4" secondAttribute="bottom" id="69G-gZ-u4I"/>
+                                    <constraint firstItem="yIK-Ki-FR4" firstAttribute="width" secondItem="NF3-9A-kzh" secondAttribute="width" id="BpZ-41-lb4"/>
+                                    <constraint firstItem="yIK-Ki-FR4" firstAttribute="centerX" secondItem="NF3-9A-kzh" secondAttribute="centerX" id="JdX-z4-Xq5"/>
+                                    <constraint firstAttribute="trailing" secondItem="yIK-Ki-FR4" secondAttribute="trailing" id="W9x-eR-2mM"/>
+                                    <constraint firstItem="yIK-Ki-FR4" firstAttribute="height" secondItem="NF3-9A-kzh" secondAttribute="height" id="icB-nL-mKU"/>
+                                    <constraint firstItem="yIK-Ki-FR4" firstAttribute="centerY" secondItem="NF3-9A-kzh" secondAttribute="centerY" id="uCa-h5-O2O"/>
+                                </constraints>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="yIK-Ki-FR4" firstAttribute="bottom" secondItem="6qW-Pj-cli" secondAttribute="bottom" id="BWy-fB-ncu"/>
-                            <constraint firstItem="yIK-Ki-FR4" firstAttribute="trailing" secondItem="6qW-Pj-cli" secondAttribute="trailing" id="bF5-4m-x7e"/>
-                            <constraint firstItem="yIK-Ki-FR4" firstAttribute="leading" secondItem="6qW-Pj-cli" secondAttribute="leading" id="rrs-Qz-sz9"/>
-                            <constraint firstItem="yIK-Ki-FR4" firstAttribute="top" secondItem="00O-AC-6IB" secondAttribute="top" id="v4h-oK-pjv"/>
+                            <constraint firstItem="NF3-9A-kzh" firstAttribute="bottom" secondItem="6qW-Pj-cli" secondAttribute="bottom" id="Qgl-7t-wD5"/>
+                            <constraint firstItem="NF3-9A-kzh" firstAttribute="top" secondItem="6qW-Pj-cli" secondAttribute="top" id="S8t-Of-VlY"/>
+                            <constraint firstItem="NF3-9A-kzh" firstAttribute="trailing" secondItem="6qW-Pj-cli" secondAttribute="trailing" id="UEY-WI-WBA"/>
+                            <constraint firstItem="NF3-9A-kzh" firstAttribute="leading" secondItem="6qW-Pj-cli" secondAttribute="leading" id="YUk-vk-kBc"/>
+                            <constraint firstItem="NF3-9A-kzh" firstAttribute="centerX" secondItem="00O-AC-6IB" secondAttribute="centerX" id="mgP-Pl-4T7"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6qW-Pj-cli"/>
                     </view>
                     <connections>
                         <outlet property="imageView" destination="yIK-Ki-FR4" id="O0J-T7-tbh"/>
+                        <outlet property="scrollView" destination="NF3-9A-kzh" id="xpg-xW-QvI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gn4-JJ-CFW" userLabel="First Responder" sceneMemberID="firstResponder"/>
