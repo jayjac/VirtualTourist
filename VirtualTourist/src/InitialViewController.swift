@@ -23,15 +23,8 @@ class InitialViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupMap()
         dismissButtonBottomConstraint.constant = -60.0
-        if let pins = DataPersistor.retrievePins() {
-            for pin in pins {
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
-                mapView.addAnnotation(annotation)
-            }
-        }
+        setupMap()
     }
     
 
@@ -60,6 +53,14 @@ class InitialViewController: UIViewController {
         mapView.addGestureRecognizer(longPress)
         guard let state = MapStatePersistor.currentMapState else { return }
         mapView.region = state.coordinateRegion
+        
+        if let pins = DataPersistor.retrievePersistedPins() {
+            for pin in pins {
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
+                mapView.addAnnotation(annotation)
+            }
+        }
     }
 
     private func saveMapState() {
@@ -80,7 +81,7 @@ class InitialViewController: UIViewController {
         let annotation = MKPointAnnotation()
         annotation.coordinate = location
         mapView.addAnnotation(annotation)
-        DataPersistor.addPin(at: location)
+        DataPersistor.persistPin(at: location)
         PhotoDownloader.downloadPhotosMetaData(for: location)
     }
     

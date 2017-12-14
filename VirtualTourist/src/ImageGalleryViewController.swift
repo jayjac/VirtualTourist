@@ -34,30 +34,36 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
             location = annotation.coordinate
         }
     }
-    
 
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initializeViews()
+    }
+    
+    private func initializeViews() {
         mapView.isScrollEnabled = false
         mapView.isZoomEnabled = false
         mapView.delegate = mapViewDelegate
-        newCollectionButton.isEnabled = false
-        
-        //TODO: add the delete capability
-        // if not in delete mode, just open up in full screen and swipe thru pager-style
         deleteButton = UIBarButtonItem(title: "Delete", style: UIBarButtonItemStyle.plain, target: self, action: #selector(toggleDeletingMode))
+        newCollectionButton.isEnabled = false
+        deleteButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = deleteButton
         imagesCollectionView.dataSource = self
         imagesCollectionView.delegate = self
-
     }
     
     @objc private func toggleDeletingMode() {
         isDeletingMode = !isDeletingMode
         deleteButton.title = isDeletingMode ? "Done" : "Delete"
+        animateDeleteIconOnVisibleCells()
+    }
+    
+    private func animateDeleteIconOnVisibleCells() {
+        let cells = imagesCollectionView.visibleCells as! [ImageCell]
+        for cell in cells {
+            cell.toggleDeleteImage(isDeletingMode)
+        }
     }
     
     
@@ -69,28 +75,29 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupMapAnnotation()
         NotificationCenter.default.addObserver(self, selector: #selector(photoMetaDetaWasRetrieved(notification:)), name: .photosMetaRetrieved, object: nil)
-        guard let annotation = annotation else { return }
-        mapView.addAnnotation(annotation)
-        let coordinate = annotation.coordinate
-        mapView.setCenter(coordinate, animated: false)
         refreshPhotos()
     }
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
     
+    private func setupMapAnnotation() {
+        //guard let annotation = annotation else { return }
+        mapView.addAnnotation(annotation)
+        mapView.setCenter(location, animated: false)
+    }
+
     @objc func photoMetaDetaWasRetrieved(notification: Notification) {
         if let pin = notification.object as? Pin,
             pin.latitude == location.latitude,
             pin.longitude == location.longitude,
             let photos = pin.photos {
             if photos.count == 0 {
-                let alert = UIAlertController(title: "No photo", message: "There was no photo taken at that location", preferredStyle: .alert)
-                self.present(alert, animated: true, completion: nil)
+                showNoPhotoAlert()
             } else {
                 refreshPhotos()
             }
@@ -111,8 +118,16 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
             checkIfAllPhotosAreLoaded()
             return
         } else {
-            
+            showNoPhotoAlert()
         }
+        
+    }
+    
+    private func showNoPhotoAlert() {
+        let alert = UIAlertController(title: "No photo", message: "There was no photo taken at that location", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
         
     }
     
@@ -125,6 +140,7 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
             }
         }
         newCollectionButton.isEnabled = loaded
+        deleteButton.isEnabled = loaded
     }
     
 
@@ -163,7 +179,7 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if isDeletingMode {
             let photo = photosArray[indexPath.row]
-            DataPersistor.deletePhoto(photo)
+            DataPersistor.deleteOneSinglePhotoFromGallery(photo)
             photosArray.remove(at: indexPath.row)
             imagesCollectionView.deleteItems(at: [indexPath])
         } else {
@@ -181,7 +197,7 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! ImageCell
         let index = indexPath.row
         let photo = photosArray[index]
-        cell.setupCell(with: photo.data, title: photo.title)
+        cell.setupCell(with: photo.data, title: photo.title, deletingMode: isDeletingMode)
         return cell
     }
     
@@ -201,8 +217,5 @@ extension ImageGalleryViewController: PhotoDownloadDelegate {
     func photoDownloadFailed(with message: String) {
         
     }
-    
-    func photoMetaRetrieved() {
 
-    }
 }

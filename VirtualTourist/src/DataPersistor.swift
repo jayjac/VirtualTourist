@@ -26,7 +26,7 @@ struct DataPersistor {
         }
     }
     
-    static func addPin(at location: CLLocationCoordinate2D) {
+    static func persistPin(at location: CLLocationCoordinate2D) {
         guard !pinExists(at: location) else { return }
         let pin = Pin(context: CoreDataStack.default.context)
         pin.latitude = location.latitude
@@ -34,7 +34,7 @@ struct DataPersistor {
         CoreDataStack.default.save()
     }
     
-    static func retrievePins() -> [Pin]? {
+    static func retrievePersistedPins() -> [Pin]? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         do {
             guard let pins = try CoreDataStack.default.context.fetch(fetchRequest) as? [Pin] else { return nil }
@@ -47,7 +47,7 @@ struct DataPersistor {
     static func removeAllPhotos(_ photos: [Photo]) {
         for photo in photos {
             CoreDataStack.default.context.delete(photo)
-            print("deleting photo")
+            //print("deleting photo")
         }
         CoreDataStack.default.save()
     }
@@ -64,7 +64,7 @@ struct DataPersistor {
                     CoreDataStack.default.context.delete(pin)
                 }
                 CoreDataStack.default.save()
-                print("pin was deleted successfully")
+                //print("pin was deleted successfully")
             }
         } catch {
             print("error deleting pin")
@@ -102,39 +102,46 @@ struct DataPersistor {
     }
     
     
-    static func addPhotos(_ photosArray: [[String: Any]], to location: CLLocationCoordinate2D) {
+    static func persistPhotoMetaData(_ photosArray: [[String: Any]], to location: CLLocationCoordinate2D, totalPages: Int) {
         DispatchQueue.main.async {
             guard let pin = retrievePin(from: location) else { return }
+            if pin.isDeleted {
+                //print("pin was deleted before metadata could be saved")
+                return
+            }
+            
             for photoJSON in photosArray {
-                guard !pin.isDeleted else {
-                    print("pin was deleted before metadata could be saved")
-                    return
-                }
+                guard let (id, secret, server, farm, title) = getJSONProperties(from: photoJSON) else { return }
                 let photo = Photo(context: CoreDataStack.default.context)
-                let id = photoJSON["id"] as? String ?? "no id"
-                let secret = photoJSON["secret"] as? String ?? "no secret"
-                let server = photoJSON["server"] as? String ?? "no server"
-                let farm = photoJSON["farm"] as? Int ?? -1
-                let title = photoJSON["title"] as? String ?? "no title"
                 let url = FlickrAPI.photoURL(farmId: farm, serverId: server, photoId: id, secret: secret)
                 photo.photoURL = url
                 photo.pin = pin
                 photo.title = title
-                if !pin.isDeleted {
-                    pin.addToPhotos(photo)
-                    CoreDataStack.default.save()
-                }
+                pin.pages = Int16(totalPages)
+                CoreDataStack.default.save()
             }
             NotificationCenter.default.post(name: .photosMetaRetrieved, object: pin)
         }
-        
+    }
+    
+    /* Parses the JSON properties for one photo element returned from Flickr and returns them as a tuple */
+    private static func getJSONProperties(from json: [String: Any]) -> (id: String, secret: String, server: String, farm: Int, title: String)? {
+        guard let id = json["id"] as? String,
+            let secret = json["secret"] as? String,
+            let server = json["server"] as? String,
+            let farm = json["farm"] as? Int else {
+            return nil
+        }
+        let title = json["title"] as? String ?? ""
+        return (id, secret, server, farm, title)
     }
     
     
+    /* Once the data for one photo is downloaded, saves it to Core Data */
     static func updatePhoto(_ photo: Photo, with data: Data) {
         DispatchQueue.main.async {
             if photo.isDeleted {
-                print("photo was deleted")
+                //print("photo was deleted")
                 return
             }
             photo.data = data
@@ -142,10 +149,8 @@ struct DataPersistor {
         }
     }
     
-    static func deletePhoto(_ photo: Photo) {
-        if let pin = photo.pin {
-            pin.removeFromPhotos(photo)
-        }
+    static func deleteOneSinglePhotoFromGallery(_ photo: Photo) {
+        photo.pin?.removeFromPhotos(photo) // removes the photo from the Pin entity's photos collection
         CoreDataStack.default.context.delete(photo)
         CoreDataStack.default.save()
     }

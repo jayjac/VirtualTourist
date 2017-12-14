@@ -23,26 +23,41 @@ protocol PhotoDownloadDelegate {
 class PhotoDownloader {
     
     
+    private static let PHOTO_GALLERY_SIZE = 60
+    
+    
     /*
      Downloads photos' URLs and title and saves it into Core Data
      Image data can be downloaded at a later time, when the user has internet access
      */
     static func downloadPhotosMetaData(for location: CLLocationCoordinate2D) {
+        let randomPage = getRandomPageForLocation(location)
         let backgroundQueue = DispatchQueue.global(qos: .background)
         backgroundQueue.async {
-            let url = FlickrAPI.searchURL(latitude: location.latitude, longitude: location.longitude)
+            let url = FlickrAPI.searchURL(latitude: location.latitude, longitude: location.longitude, page: randomPage)
             let session = URLSession.shared
             let task = session.dataTask(with: url, completionHandler: { (data, response, error) in
                 if let error = error {
                     print(error.localizedDescription)
                     return
                 }
-                guard let photosArray = parsePhotoArray(from: data) else { return }
-                let randomArray = randomizedPhotosArray(photosArray)
-                DataPersistor.addPhotos(randomArray, to: location)
+                let photoMetaData = parsePhotoArray(from: data)
+                guard let photosArray = photoMetaData.array else { return }
+                let numberOfPages = photoMetaData.numberOfPages
+                let randomArray = photosArray.count > PHOTO_GALLERY_SIZE ? randomizedPhotosArray(photosArray) : photosArray
+                DataPersistor.persistPhotoMetaData(randomArray, to: location, totalPages: numberOfPages)
             })
             task.resume()
         }
+    }
+    
+    private static func getRandomPageForLocation(_ location: CLLocationCoordinate2D) -> Int {
+        guard let pin = DataPersistor.retrievePin(from: location) else {
+            return 1
+        }
+        let pages = UInt32(pin.pages)
+        let randomPage = arc4random_uniform(pages) + 1
+        return Int(randomPage)
     }
     
     /*
@@ -51,7 +66,7 @@ class PhotoDownloader {
     static func randomizedPhotosArray(_ photos: [[String: Any]]) -> [[String: Any]] {
         var randomArray = [[String: Any]]()
         var arrayCopy = photos
-        for _ in 0..<60 {
+        for _ in 0..<PHOTO_GALLERY_SIZE {
             let length = UInt32(arrayCopy.count)
             let random = Int(arc4random_uniform(length))
             let element = arrayCopy.remove(at: random)
@@ -63,18 +78,19 @@ class PhotoDownloader {
     /*
      Returns a JSON array from the Flickr data
      */
-    static func parsePhotoArray(from data: Data?) -> [[String: Any]]? {
+    static func parsePhotoArray(from data: Data?) -> (array: [[String: Any]]?, numberOfPages: Int) {
         if let data = data {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                     let photoPage = json["photos"] as? [String: Any],
-                    let photos = photoPage["photo"] as? [[String: Any]] {
+                    let photos = photoPage["photo"] as? [[String: Any]],
+                    let pages = photoPage["pages"] as? Int {
                     //print(json)
-                    return photos
+                    return (photos, pages)
                 }
             } catch {}
         }
-        return nil
+        return (nil, 0)
     }
     
     static func downloadPhoto(_ photo: Photo, at index: Int, notify delegate: PhotoDownloadDelegate) {

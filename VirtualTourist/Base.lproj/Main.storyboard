@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,7 +23,7 @@
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHE-Ae-AK6" userLabel="Dismiss Button">
                                 <rect key="frame" x="0.0" y="607" width="375" height="60"/>
-                                <color key="backgroundColor" red="0.94058334830000001" green="0.57152521609999996" blue="0.2156203538" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" red="0.20428091287612915" green="0.47274726629257202" blue="0.9647558331489563" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="7oa-WH-hlG"/>
                                 </constraints>
@@ -102,32 +103,52 @@
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="R0I-06-osy">
                                                     <rect key="frame" x="71" y="61" width="20" height="20"/>
                                                 </activityIndicatorView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pcE-Bb-zyo">
+                                                <imageView userInteractionEnabled="NO" alpha="0.20000000000000001" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pcE-Bb-zyo">
                                                     <rect key="frame" x="53.5" y="0.0" width="55" height="55"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="55" id="7Jr-IS-GBA"/>
                                                         <constraint firstAttribute="width" constant="55" id="Fu3-kN-Adb"/>
                                                     </constraints>
                                                 </imageView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8u8-nF-c1K" userLabel="Overlay view">
+                                                    <rect key="frame" x="0.0" y="0.0" width="163" height="143"/>
+                                                    <color key="backgroundColor" red="0.69056031050955413" green="0.69056031050955413" blue="0.69056031050955413" alpha="0.32398110741444869" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="delete" translatesAutoresizingMaskIntoConstraints="NO" id="Eh3-Il-yfd">
+                                                    <rect key="frame" x="128" y="108" width="22" height="22"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="22" id="YhG-In-xMX"/>
+                                                        <constraint firstAttribute="width" constant="22" id="cT8-j0-kAL"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstAttribute="trailingMargin" secondItem="Eh3-Il-yfd" secondAttribute="trailing" constant="5" id="0QC-IR-rfb"/>
                                             <constraint firstItem="zMV-R8-Gs5" firstAttribute="leading" secondItem="4eR-8W-Yg3" secondAttribute="leading" id="26W-cO-nc6"/>
+                                            <constraint firstItem="8u8-nF-c1K" firstAttribute="leading" secondItem="4eR-8W-Yg3" secondAttribute="leading" id="4uL-Md-zBk"/>
+                                            <constraint firstAttribute="trailing" secondItem="8u8-nF-c1K" secondAttribute="trailing" id="6TM-Vw-oob"/>
                                             <constraint firstItem="pcE-Bb-zyo" firstAttribute="top" secondItem="4eR-8W-Yg3" secondAttribute="top" id="6tJ-fY-ZGv"/>
                                             <constraint firstItem="heh-EZ-CPZ" firstAttribute="top" secondItem="4eR-8W-Yg3" secondAttribute="top" id="9Cf-KH-PGI"/>
                                             <constraint firstAttribute="bottom" secondItem="heh-EZ-CPZ" secondAttribute="bottom" id="9JN-Gr-CdY"/>
                                             <constraint firstItem="R0I-06-osy" firstAttribute="centerX" secondItem="4eR-8W-Yg3" secondAttribute="centerX" id="B6I-Fy-u00"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="Eh3-Il-yfd" secondAttribute="bottom" constant="5" id="L3x-su-NRk"/>
+                                            <constraint firstAttribute="bottom" secondItem="8u8-nF-c1K" secondAttribute="bottom" id="Xfx-to-4jn"/>
                                             <constraint firstItem="heh-EZ-CPZ" firstAttribute="leading" secondItem="4eR-8W-Yg3" secondAttribute="leading" id="Zmc-fb-tqW"/>
                                             <constraint firstAttribute="trailing" secondItem="zMV-R8-Gs5" secondAttribute="trailing" id="hXz-I9-4z5"/>
                                             <constraint firstAttribute="trailing" secondItem="heh-EZ-CPZ" secondAttribute="trailing" id="hcZ-Tn-BSS"/>
                                             <constraint firstItem="R0I-06-osy" firstAttribute="centerY" secondItem="4eR-8W-Yg3" secondAttribute="centerY" id="m6R-kP-JDK"/>
                                             <constraint firstItem="pcE-Bb-zyo" firstAttribute="centerX" secondItem="4eR-8W-Yg3" secondAttribute="centerX" id="my7-xO-Zvx"/>
+                                            <constraint firstItem="8u8-nF-c1K" firstAttribute="top" secondItem="4eR-8W-Yg3" secondAttribute="top" id="rwZ-nP-8fH"/>
                                             <constraint firstAttribute="bottom" secondItem="zMV-R8-Gs5" secondAttribute="bottom" id="yRb-oS-hFN"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="activityIndicator" destination="R0I-06-osy" id="Ey4-PC-HHI"/>
+                                            <outlet property="deleteImageView" destination="Eh3-Il-yfd" id="YmH-FQ-Uds"/>
+                                            <outlet property="deleteImageViewTrailingConstraint" destination="0QC-IR-rfb" id="t6f-eo-hOa"/>
                                             <outlet property="imageView" destination="heh-EZ-CPZ" id="ljO-tg-yeJ"/>
                                             <outlet property="label" destination="zMV-R8-Gs5" id="9zE-N3-TOH"/>
+                                            <outlet property="overlayView" destination="8u8-nF-c1K" id="gZt-sB-OBt"/>
                                             <outlet property="placeholderImageView" destination="pcE-Bb-zyo" id="dAW-yJ-Sx6"/>
                                         </connections>
                                     </collectionViewCell>
@@ -141,10 +162,11 @@
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nXS-Un-IsC">
                                 <rect key="frame" x="0.0" y="612" width="375" height="55"/>
-                                <color key="backgroundColor" red="0.043713553970155861" green="1" blue="0.00693619371499965" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" red="0.20428091287612915" green="0.47274726629257202" blue="0.9647558331489563" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="tfR-pQ-RvM"/>
                                 </constraints>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="New collection"/>
                                 <connections>
                                     <action selector="newCollectionButtonWasTapped:" destination="w6o-nc-vxA" eventType="touchUpInside" id="lVi-D1-0O5"/>
@@ -225,4 +247,7 @@
             <point key="canvasLocation" x="-255" y="134"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="delete" width="25" height="25"/>
+    </resources>
 </document>
