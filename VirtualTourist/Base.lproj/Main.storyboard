@@ -20,6 +20,9 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="iSg-mh-ShT">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="awC-VQ-Ioq"/>
+                                </connections>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHE-Ae-AK6" userLabel="Dismiss Button">
                                 <rect key="frame" x="0.0" y="607" width="375" height="60"/>
@@ -208,10 +211,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NF3-9A-kzh">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yIK-Ki-FR4">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -227,10 +230,9 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="NF3-9A-kzh" firstAttribute="bottom" secondItem="6qW-Pj-cli" secondAttribute="bottom" id="Qgl-7t-wD5"/>
-                            <constraint firstItem="NF3-9A-kzh" firstAttribute="top" secondItem="6qW-Pj-cli" secondAttribute="top" id="S8t-Of-VlY"/>
                             <constraint firstItem="NF3-9A-kzh" firstAttribute="trailing" secondItem="6qW-Pj-cli" secondAttribute="trailing" id="UEY-WI-WBA"/>
                             <constraint firstItem="NF3-9A-kzh" firstAttribute="leading" secondItem="6qW-Pj-cli" secondAttribute="leading" id="YUk-vk-kBc"/>
-                            <constraint firstItem="NF3-9A-kzh" firstAttribute="centerX" secondItem="00O-AC-6IB" secondAttribute="centerX" id="mgP-Pl-4T7"/>
+                            <constraint firstItem="NF3-9A-kzh" firstAttribute="top" secondItem="00O-AC-6IB" secondAttribute="top" id="aaJ-wa-3Ur"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6qW-Pj-cli"/>
                     </view>

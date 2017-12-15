@@ -31,7 +31,7 @@ class SinglePhotoViewController: UIViewController {
         scrollView.delegate = self
         scrollView.zoomScale = 1.0
         scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 2.0
+        scrollView.maximumZoomScale = 3.0
         guard let data = photoData else { return }
         imageView.image = UIImage(data: data)
     }

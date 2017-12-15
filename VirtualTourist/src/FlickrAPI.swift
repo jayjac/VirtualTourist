@@ -9,11 +9,10 @@
 import Foundation
 import CoreLocation
 
+
+
+
 struct FlickrAPI {
-    
-    static let endPoint = "https://api.flickr.com/services/rest"
-    static let key = "30ea6c99243c8de780e96f54608709ae"
-    static let searchMethodName = "flickr.photos.search"
     
     static func photoURL(farmId: Int, serverId: String, photoId: String, secret: String) -> URL {
         let urlString = "https://farm\(farmId).staticflickr.com/\(serverId)/\(photoId)_\(secret)_c.jpg"
@@ -32,7 +31,10 @@ struct FlickrAPI {
        - page: Page of results to return. This is saved in the pin's core data 'pages' attribute
      */
     static func searchURL(latitude: CLLocationDegrees, longitude: CLLocationDegrees, page: Int = 1) -> URL {
-        let queryString = "?api_key=\(FlickrAPI.key)&format=json&nojsoncallback=1&per_page=500&method=\(searchMethodName)&lon=\(longitude)&lat=\(latitude)&page=\(page)"
+        let key = Constants.FlickrAPI.key
+        let searchMethodName = Constants.FlickrAPI.searchMethodName
+        let endPoint = Constants.FlickrAPI.endPoint
+        let queryString = "?api_key=\(key)&format=json&nojsoncallback=1&method=\(searchMethodName)&lon=\(longitude)&lat=\(latitude)&page=\(page)"
         let url = URL(string: endPoint + queryString)!
         return url
     }

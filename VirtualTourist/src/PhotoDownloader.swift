@@ -23,7 +23,7 @@ protocol PhotoDownloadDelegate {
 class PhotoDownloader {
     
     
-    private static let PHOTO_GALLERY_SIZE = 60
+    private static let PHOTO_GALLERY_SIZE = 48
     
     
     /*
@@ -55,7 +55,8 @@ class PhotoDownloader {
         guard let pin = DataPersistor.retrievePin(from: location) else {
             return 1
         }
-        let pages = UInt32(pin.pages)
+        let maxNumberOfPages = min(pin.pages, 4000 / 250)
+        let pages = UInt32(maxNumberOfPages)
         let randomPage = arc4random_uniform(pages) + 1
         return Int(randomPage)
     }

@@ -35,6 +35,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     private var noPhotoAlert: UIAlertController?
+    private var hasDownloadErrorBeenShownAlready = false
 
     
     override func viewDidLoad() {
@@ -61,9 +62,15 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     private func animateDeleteIconOnVisibleCells() {
-        let cells = imagesCollectionView.visibleCells as! [ImageCell]
-        for cell in cells {
+        let visibleCells = imagesCollectionView.visibleCells as! [ImageCell]
+        for cell in visibleCells {
             cell.toggleDeleteImage(isDeletingMode)
+        }
+        // Because of some inconsistency where some cells show the delete button when they shouldn't (or vice versa) after a toggle,
+        // I refresh the whole thing after the toggle animation is finished (hence the 0.5 delay)
+        let delay = DispatchTime.now() + 0.5
+        DispatchQueue.main.asyncAfter(deadline: delay) {
+            self.imagesCollectionView.reloadData()
         }
     }
     
@@ -119,27 +126,15 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
             }
             checkIfAllPhotosAreLoaded()
             return
-        } else {
-            showNoPhotoAlert()
         }
         
     }
 
     
     private func showNoPhotoAlert() {
-        let alert = UIAlertController(title: "No photo", message: "There was no photo taken at that location", preferredStyle: .alert)
-        noPhotoAlert = alert
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(okAction)
-        self.present(alert, animated: true, completion: nil)
+        showAlert(title: "No photo", message: "There was no photo taken at that location")
     }
-    
-    private func showErrorAlert(with message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(okAction)
-        self.present(alert, animated: true, completion: nil)
-    }
+
     
     private func checkIfAllPhotosAreLoaded() {
         var loaded = true
@@ -196,7 +191,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
             imagesCollectionView.deleteItems(at: [indexPath])
         } else {
             selectedCellIndex = indexPath.row
-            performSegue(withIdentifier: "SinglePhotoSegue", sender: nil)
+            if photosArray[selectedCellIndex!].data != nil {
+                performSegue(withIdentifier: "SinglePhotoSegue", sender: nil)
+            }
         }
     }
 
@@ -227,7 +224,10 @@ extension PhotoAlbumViewController: PhotoDownloadDelegate {
     }
     
     func photoDownloadFailed(with message: String) {
-        showErrorAlert(with: message)
+        if !hasDownloadErrorBeenShownAlready {
+            hasDownloadErrorBeenShownAlready = true
+            showAlert(title: "Error", message: message)
+        }
     }
 
 }

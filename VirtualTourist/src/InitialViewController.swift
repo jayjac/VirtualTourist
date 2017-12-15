@@ -48,7 +48,7 @@ class InitialViewController: UIViewController {
     
     
     private func setupMap() {
-        mapView.delegate = self
+        //mapView.delegate = self (set from storyboard)
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressOnMap(_:)))
         mapView.addGestureRecognizer(longPress)
         guard let state = MapStatePersistor.currentMapState else { return }
